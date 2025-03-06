@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Hemcare",
-    "slug": "Hemcare",
+    "slug": "hemcare-dweekfada0wcnjor7qipq",
     "scheme": "Hemcare",
     "version": "1.0.0",
     "icon": "./assets/logo.png",
@@ -28,7 +28,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.react_dev_81.hemcaredweekfada0wcnjor7qipq"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "38399bb2-94dc-46e9-9ef5-321c757d9ee8"
       }
-    }
+    },
+    "owner": "react_dev_81"
   }
 }
