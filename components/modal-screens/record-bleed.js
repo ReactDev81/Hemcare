@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import Svg, { Path, G, Defs, Rect, ClipPath, Mask} from 'react-native-svg';
-import { Modal, View, Text, Pressable, ImageBackground, StyleSheet, ScrollView} from 'react-native';
-import ModalHeader from '../ui/modal-header';
-import FlatButton from '../ui/FlatButton';
+import { Modal, View, Text, Pressable, ScrollView} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RadioButton } from 'react-native-paper';
+import ModalHeader from '../ui/modal-header';
+import FlatButton from '../ui/FlatButton';
 import Select from '../ui/form/select';
 import Input from '../ui/form/input';
-import RadioInput from '../ui/form/radio';
+import FullBody from './body-parts/full-body';
+import Hand from './body-parts/hand';
+import Feet from './body-parts/feet';
+import Backbone from './body-parts/backbone';
+import Scale from './bleed-and-pain-intensity-scale';
 
 const RecordBleed = ({ visible, onClose }) => {
 
@@ -41,7 +45,7 @@ const RecordBleed = ({ visible, onClose }) => {
             <Pressable onPress={() => goToStep(2)} className="items-center gap-y-1.5" activeOpacity={1}>
                 <View className={`w-12 h-12 relative rounded-full flex items-center justify-center ${step === 2 ? 'bg-red-light' : 'bg-gray-light'}`}>
                     <View className={`w-[10px] h-[10px] absolute -bottom-1 left-5 rotate-45 ${step === 2 ? 'bg-red-light' : 'bg-transparent'}`}></View>
-                    <Svg width="23" height="26" viewBox="0 0 23 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <Svg width="23" height="23" viewBox="0 0 23 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <Path d="M11.0833 5.83333C12.6915 5.83333 14 4.52482 14 2.91667C14 1.30851 12.6915 0 11.0833 0C9.47518 0 8.16667 1.30851 8.16667 2.91667C8.16667 4.52482 9.47518 5.83333 11.0833 5.83333ZM11.0833 1.16667C12.0483 1.16667 12.8333 1.95166 12.8333 2.91667C12.8333 3.88167 12.0483 4.66667 11.0833 4.66667C10.1183 4.66667 9.33333 3.88167 9.33333 2.91667C9.33333 1.95166 10.1183 1.16667 11.0833 1.16667ZM16.9167 16.3333V10.5C16.9167 8.56999 15.3467 7 13.4167 7H8.75C6.81999 7 5.25 8.56999 5.25 10.5V16.3333C5.25 17.2983 6.03499 18.0833 7 18.0833H7.58333V23.9167C7.58333 24.8817 8.36833 25.6667 9.33333 25.6667H9.91667C10.3665 25.6667 10.773 25.4914 11.0833 25.2115C11.3937 25.4914 11.8002 25.6667 12.25 25.6667H12.8333C13.7983 25.6667 14.5833 24.8817 14.5833 23.9167V18.0833H15.1667C16.1317 18.0833 16.9167 17.2983 16.9167 16.3333ZM14 10.5C13.6776 10.5 13.4167 10.7612 13.4167 11.0833V23.9167C13.4167 24.2385 13.1552 24.5 12.8333 24.5H12.25C11.9281 24.5 11.6667 24.2385 11.6667 23.9167V18.0833C11.6667 17.7609 11.4055 17.5 11.0833 17.5C10.7612 17.5 10.5 17.7609 10.5 18.0833V23.9167C10.5 24.2385 10.2382 24.5 9.91667 24.5H9.33333C9.01176 24.5 8.75 24.2385 8.75 23.9167V11.0833C8.75 10.7612 8.48881 10.5 8.16667 10.5C7.84452 10.5 7.58333 10.7612 7.58333 11.0833V16.9167H7C6.67843 16.9167 6.41667 16.6552 6.41667 16.3333V10.5C6.41667 9.21342 7.46342 8.16667 8.75 8.16667H13.4167C14.7035 8.16667 15.75 9.21342 15.75 10.5V16.3333C15.75 16.6552 15.4885 16.9167 15.1667 16.9167H14.5833V11.0833C14.5833 10.7612 14.3224 10.5 14 10.5ZM5.83333 25.0833C5.83333 25.4058 5.57214 25.6667 5.25 25.6667H2.91667C1.30851 25.6667 0 24.3582 0 22.75V2.91667C0 1.30851 1.30851 0 2.91667 0H5.25C5.57214 0 5.83333 0.26119 5.83333 0.583333C5.83333 0.905477 5.57214 1.16667 5.25 1.16667H2.91667C1.95166 1.16667 1.16667 1.95166 1.16667 2.91667V22.75C1.16667 23.715 1.95166 24.5 2.91667 24.5H5.25C5.57214 24.5 5.83333 24.7609 5.83333 25.0833ZM22.1667 2.91667V22.75C22.1667 24.3582 20.8582 25.6667 19.25 25.6667H16.9167C16.5942 25.6667 16.3333 25.4058 16.3333 25.0833C16.3333 24.7609 16.5942 24.5 16.9167 24.5H19.25C20.215 24.5 21 23.715 21 22.75V2.91667C21 1.95166 20.215 1.16667 19.25 1.16667H16.9167C16.5942 1.16667 16.3333 0.905477 16.3333 0.583333C16.3333 0.26119 16.5942 0 16.9167 0H19.25C20.8582 0 22.1667 1.30851 22.1667 2.91667Z" fill={step === 2 ? '#F43F5E' : '#5C6679'} />
                     </Svg>
                 </View>
@@ -50,13 +54,13 @@ const RecordBleed = ({ visible, onClose }) => {
             <Pressable onPress={() => goToStep(3)} className="items-center gap-y-1.5" activeOpacity={1}>
                 <View className={`w-12 h-12 relative rounded-full flex items-center justify-center ${step === 3 ? 'bg-red-light' : 'bg-gray-light'}`}>
                     <View className={`w-[10px] h-[10px] absolute -bottom-1 left-5 rotate-45 ${step === 3 ? 'bg-red-light' : 'bg-transparent'}`}></View>
-                    <Svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <Svg width="25" height="25" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <G clip-path="url(#clip0_472_492)">
                             <Path d="M17.7457 2.9V3.4H18.2457H24.7103C25.2196 3.4 25.5999 3.78031 25.5999 4.28958V7.25C25.5999 7.75927 25.2196 8.13958 24.7103 8.13958H18.2457H17.7457V8.63958V27.1875C17.7457 27.8889 17.1734 28.5 16.4332 28.5H12.5666C11.8264 28.5 11.2541 27.8889 11.2541 27.1875V8.63958V8.13958H10.7541H4.28949C3.78021 8.13958 3.3999 7.75927 3.3999 7.25V4.28958C3.3999 3.78031 3.78021 3.4 4.28949 3.4H10.7541H11.2541V2.9V1.8125C11.2541 1.06156 11.8156 0.5 12.5666 0.5H16.4332C17.1842 0.5 17.7457 1.06156 17.7457 1.8125V2.9ZM17.0374 3.4H17.5374V2.9V1.8125C17.5374 1.14193 16.9784 0.708333 16.4332 0.708333H12.5666C12.0214 0.708333 11.4624 1.14193 11.4624 1.8125V2.9V3.4H11.9624H17.0374ZM11.9624 8.13958H11.4624V8.63958V27.1875C11.4624 27.8581 12.0214 28.2917 12.5666 28.2917H16.4332C16.9784 28.2917 17.5374 27.8581 17.5374 27.1875V25.4354V24.9354H17.0374H14.1374C14.1024 24.9354 14.0808 24.9296 14.0696 24.9253C14.0588 24.9212 14.0545 24.9173 14.0529 24.9157C14.0514 24.9142 14.0475 24.9099 14.0433 24.8991C14.039 24.8878 14.0332 24.8662 14.0332 24.8312C14.0332 24.7963 14.039 24.7747 14.0433 24.7634C14.0475 24.7526 14.0514 24.7484 14.0529 24.7468C14.0545 24.7452 14.0588 24.7413 14.0696 24.7372C14.0808 24.7329 14.1024 24.7271 14.1374 24.7271H17.0374H17.5374V24.2271V21.9917V21.4917H17.0374H15.4062C15.3712 21.4917 15.3496 21.4859 15.3383 21.4816C15.3275 21.4774 15.3233 21.4735 15.3217 21.472C15.3201 21.4704 15.3162 21.4661 15.3121 21.4553C15.3078 21.4441 15.302 21.4225 15.302 21.3875C15.302 21.3525 15.3078 21.3309 15.3121 21.3197C15.3162 21.3089 15.3201 21.3046 15.3217 21.303C15.3233 21.3015 15.3275 21.2976 15.3383 21.2934C15.3496 21.2891 15.3712 21.2833 15.4062 21.2833H17.0374H17.5374V20.7833V18.5479V18.0479H17.0374H14.1374C14.1024 18.0479 14.0808 18.0421 14.0696 18.0378C14.0588 18.0337 14.0545 18.0298 14.0529 18.0282C14.0514 18.0267 14.0475 18.0224 14.0433 18.0116C14.039 18.0004 14.0332 17.9787 14.0332 17.9438C14.0332 17.9088 14.039 17.8872 14.0433 17.8759C14.0475 17.8651 14.0514 17.8609 14.0529 17.8593C14.0545 17.8577 14.0588 17.8538 14.0696 17.8497C14.0808 17.8454 14.1024 17.8396 14.1374 17.8396H17.0374H17.5374V17.3396V15.1042V14.6042H17.0374H15.4062C15.3712 14.6042 15.3496 14.5984 15.3383 14.5941C15.3275 14.5899 15.3233 14.586 15.3217 14.5845C15.3201 14.5829 15.3162 14.5786 15.3121 14.5678C15.3078 14.5566 15.302 14.535 15.302 14.5C15.302 14.465 15.3078 14.4434 15.3121 14.4322C15.3162 14.4214 15.3201 14.4171 15.3217 14.4155C15.3233 14.414 15.3275 14.4101 15.3383 14.4059C15.3496 14.4016 15.3712 14.3958 15.4062 14.3958H17.0374H17.5374V13.8958V11.6604V11.1604H17.0374H14.1374C14.1024 11.1604 14.0808 11.1546 14.0696 11.1503C14.0588 11.1462 14.0545 11.1423 14.0529 11.1407C14.0514 11.1391 14.0475 11.1349 14.0433 11.1241C14.039 11.1128 14.0332 11.0912 14.0332 11.0562C14.0332 11.0213 14.039 10.9997 14.0433 10.9884C14.0475 10.9776 14.0514 10.9734 14.0529 10.9718C14.0545 10.9702 14.0588 10.9663 14.0696 10.9622C14.0808 10.9579 14.1024 10.9521 14.1374 10.9521H17.0374H17.5374V10.4521V8.63958V8.13958H17.0374H11.9624ZM24.7103 7.93125C24.8478 7.93125 25.0428 7.89654 25.1998 7.73949C25.3569 7.58244 25.3916 7.38749 25.3916 7.25V4.28958C25.3916 4.15209 25.3569 3.95714 25.1998 3.80009C25.0428 3.64304 24.8478 3.60833 24.7103 3.60833H4.28949C4.152 3.60833 3.95704 3.64304 3.79999 3.80009C3.64295 3.95714 3.60824 4.15209 3.60824 4.28958V7.25C3.60824 7.38749 3.64295 7.58244 3.79999 7.73949C3.95704 7.89654 4.152 7.93125 4.28949 7.93125H24.7103Z" fill={step === 3 ? '#F43F5E' : '#5C6679'} stroke={step === 3 ? '#F43F5E' : '#5C6679'} />
                         </G>
                         <Defs>
                             <ClipPath id="clip0_472_492">
-                                <Rect width="29" height="29" fill="white"/>
+                                <Rect width="25" height="25" fill="white"/>
                             </ClipPath>
                         </Defs>
                     </Svg>
@@ -128,7 +132,7 @@ const RecordBleed = ({ visible, onClose }) => {
         <>
             <Pressable onPress={() => goToBodyPart(1)} className="items-center gap-y-1.5" activeOpacity={1}>
                 <View className={`w-10 h-10 relative rounded-[10px] flex items-center justify-center ${bodyPart === 1 ? 'bg-red-light' : 'bg-gray-light'}`}>
-                    <Svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <Svg width="24" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <Path d="M11.9998 6.00002C13.608 6.00002 14.9165 4.69151 14.9165 3.08335C14.9165 1.4752 13.608 0.166687 11.9998 0.166687C10.3917 0.166687 9.08317 1.4752 9.08317 3.08335C9.08317 4.69151 10.3917 6.00002 11.9998 6.00002ZM11.9998 1.33335C12.9648 1.33335 13.7498 2.11835 13.7498 3.08335C13.7498 4.04836 12.9648 4.83335 11.9998 4.83335C11.0348 4.83335 10.2498 4.04836 10.2498 3.08335C10.2498 2.11835 11.0348 1.33335 11.9998 1.33335ZM17.8332 16.5V10.6667C17.8332 8.73667 16.2632 7.16669 14.3332 7.16669H9.6665C7.73649 7.16669 6.1665 8.73667 6.1665 10.6667V16.5C6.1665 17.465 6.9515 18.25 7.9165 18.25H8.49984V24.0834C8.49984 25.0484 9.28483 25.8334 10.2498 25.8334H10.8332C11.283 25.8334 11.6895 25.658 11.9998 25.3782C12.3102 25.658 12.7167 25.8334 13.1665 25.8334H13.7498C14.7148 25.8334 15.4998 25.0484 15.4998 24.0834V18.25H16.0832C17.0482 18.25 17.8332 17.465 17.8332 16.5ZM14.9165 10.6667C14.5941 10.6667 14.3332 10.9279 14.3332 11.25V24.0834C14.3332 24.4052 14.0717 24.6667 13.7498 24.6667H13.1665C12.8446 24.6667 12.5832 24.4052 12.5832 24.0834V18.25C12.5832 17.9276 12.322 17.6667 11.9998 17.6667C11.6777 17.6667 11.4165 17.9276 11.4165 18.25V24.0834C11.4165 24.4052 11.1547 24.6667 10.8332 24.6667H10.2498C9.92826 24.6667 9.6665 24.4052 9.6665 24.0834V11.25C9.6665 10.9279 9.40531 10.6667 9.08317 10.6667C8.76103 10.6667 8.49984 10.9279 8.49984 11.25V17.0834H7.9165C7.59493 17.0834 7.33317 16.8219 7.33317 16.5V10.6667C7.33317 9.38011 8.37992 8.33335 9.6665 8.33335H14.3332C15.62 8.33335 16.6665 9.38011 16.6665 10.6667V16.5C16.6665 16.8219 16.405 17.0834 16.0832 17.0834H15.4998V11.25C15.4998 10.9279 15.2389 10.6667 14.9165 10.6667ZM6.74984 25.25C6.74984 25.5725 6.48865 25.8334 6.1665 25.8334H3.83317C2.22502 25.8334 0.916504 24.5248 0.916504 22.9167V3.08335C0.916504 1.4752 2.22502 0.166687 3.83317 0.166687H6.1665C6.48865 0.166687 6.74984 0.427877 6.74984 0.75002C6.74984 1.07216 6.48865 1.33335 6.1665 1.33335H3.83317C2.86816 1.33335 2.08317 2.11835 2.08317 3.08335V22.9167C2.08317 23.8817 2.86816 24.6667 3.83317 24.6667H6.1665C6.48865 24.6667 6.74984 24.9276 6.74984 25.25ZM23.0832 3.08335V22.9167C23.0832 24.5248 21.7747 25.8334 20.1665 25.8334H17.8332C17.5107 25.8334 17.2498 25.5725 17.2498 25.25C17.2498 24.9276 17.5107 24.6667 17.8332 24.6667H20.1665C21.1315 24.6667 21.9165 23.8817 21.9165 22.9167V3.08335C21.9165 2.11835 21.1315 1.33335 20.1665 1.33335H17.8332C17.5107 1.33335 17.2498 1.07216 17.2498 0.75002C17.2498 0.427877 17.5107 0.166687 17.8332 0.166687H20.1665C21.7747 0.166687 23.0832 1.4752 23.0832 3.08335Z" fill={bodyPart === 1 ? '#F43F5E' : '#5C6679'} />
                     </Svg>
                 </View>
@@ -199,7 +203,6 @@ const RecordBleed = ({ visible, onClose }) => {
             </Pressable>
         </>
     )
-
 
     return(
         <Modal
@@ -275,198 +278,16 @@ const RecordBleed = ({ visible, onClose }) => {
                                     <View className="mt-2.5 flex-row justify-between">
                                         <View className="flex-1">
                                             {bodyPart === 1 && (
-                                                <View>
-                                                    <Text className="text-red-dark font-bold text-sm leading-4 mb-4">{selectedPart}</Text>
-                                                    <ImageBackground
-                                                        source={require('../../assets/images/body.png')}
-                                                        className="w-[155px] h-[477px] relative ml-4"
-                                                        resizeMode="cover"
-                                                    >
-                                                        <Text className="text-gray-dark text-xs leading-[14.52px] absolute top-2/4 -left-6">R</Text>
-                                                        <Text className="text-gray-dark text-xs leading-[14.52px] absolute top-2/4 -right-6">L</Text>
-                                                        <RadioInput 
-                                                            classname="top-[15px] left-[70px]"
-                                                            onPress={() => handleBodyPartSelection('Head')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Head"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[64px] left-[70px]"
-                                                            onPress={() => handleBodyPartSelection('Jaw')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Jaw"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[98px] left-[18px]"
-                                                            onPress={() => handleBodyPartSelection('Right Shoulder')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Shoulder"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[98px] left-[120px]"
-                                                            onPress={() => handleBodyPartSelection('Left Shoulder')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Shoulder"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[130px] left-[70px]"
-                                                            onPress={() => handleBodyPartSelection('Chest')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Chest"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[170px] left-[7px]"
-                                                            onPress={() => handleBodyPartSelection('Right Elbow')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Elbow"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[170px] left-[132px]"
-                                                            onPress={() => handleBodyPartSelection('Left Elbow')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Elbow"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[240px] left-[4px]"
-                                                            onPress={() => handleBodyPartSelection('Right Wrist')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Wrist"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[240px] left-[135px]"
-                                                            onPress={() => handleBodyPartSelection('Left Wrist')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Wrist"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[220px] left-[40px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hip')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hip"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[220px] left-[100px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hip')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hip"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[350px] left-[44px]"
-                                                            onPress={() => handleBodyPartSelection('Right Knee')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Knee"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[350px] left-[96px]"
-                                                            onPress={() => handleBodyPartSelection('Left Knee')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Knee"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[442px] left-[52px]"
-                                                            onPress={() => handleBodyPartSelection('Right Ankle')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Ankle"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[442px] left-[87px]"
-                                                            onPress={() => handleBodyPartSelection('Left Ankle')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Ankle"
-                                                        />
-                                                    </ImageBackground>
-                                                </View>
+                                                <FullBody selectedPart={selectedPart} handleBodyPartSelection={handleBodyPartSelection} />
                                             )}
                                             {bodyPart === 2 && (
-                                                <View>
-                                                    <Text className="text-red-dark font-bold text-sm leading-4 mb-4">{selectedPart}</Text>
-                                                    <ImageBackground
-                                                        source={require('../../assets/images/left-hand.png')}
-                                                        className="w-[212px] h-[180px] relative"
-                                                        resizeMode="cover"
-                                                    >
-                                                        <Text className="text-gray-dark text-xs leading-[14.52px] absolute top-4 left-5">L</Text>
-                                                        <RadioInput 
-                                                            classname="top-[150px] left-[110px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Thumb')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Thumb"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[92px] left-[168px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Finger 1')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Finger 1"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[50px] left-[174px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Finger 2')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Finger 2"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[24px] left-[150px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Finger 3')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Finger 3"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[2px] left-[108px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Finger 4')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Finger 4"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[85px] left-[60px]"
-                                                            onPress={() => handleBodyPartSelection('Left Hand - Sole')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Left Hand - Sole"
-                                                        />
-                                                    </ImageBackground>
-                                                    <ImageBackground
-                                                        source={require('../../assets/images/right-hand.png')}
-                                                        className="w-[212px] h-[180px] relative"
-                                                        resizeMode="cover"
-                                                    >
-                                                        <Text className="text-gray-dark text-xs leading-[14.52px] absolute top-4 left-5">R</Text>
-                                                        <RadioInput 
-                                                            classname="top-[12px] left-[110px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Thumb')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Thumb"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[72px] left-[170px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Finger 1')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Finger 1"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[114px] left-[174px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Finger 2')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Finger 2"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[140px] left-[150px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Finger 3')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Finger 3"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[158px] left-[105px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Finger 4')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Finger 4"
-                                                        />
-                                                        <RadioInput 
-                                                            classname="top-[80px] left-[60px]"
-                                                            onPress={() => handleBodyPartSelection('Right Hand - Sole')}
-                                                            selectedRadio={selectedPart}
-                                                            selectedRadioValue="Right Hand - Sole"
-                                                        />
-                                                    </ImageBackground>
-                                                </View>
+                                                <Hand selectedPart={selectedPart} handleBodyPartSelection={handleBodyPartSelection} />
+                                            )}
+                                            {bodyPart === 3 && (
+                                                <Feet selectedPart={selectedPart} handleBodyPartSelection={handleBodyPartSelection} />
+                                            )}
+                                            {bodyPart === 4 && (
+                                                <Backbone selectedPart={selectedPart} handleBodyPartSelection={handleBodyPartSelection} />
                                             )}
                                         </View>
                                         <View className="w-16">
@@ -478,6 +299,7 @@ const RecordBleed = ({ visible, onClose }) => {
                             {step === 3 && (
                                 <View>
                                     <Text className="text-blue-dark font-semibold text-lg leading-[21.6px]">Select Pain and Bleed Intensity</Text>
+                                    <Scale />
                                 </View>
                             )}
                             {step === 4 && (

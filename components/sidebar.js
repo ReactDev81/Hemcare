@@ -1,16 +1,53 @@
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, Image, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link, useRouter } from 'expo-router';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Link } from 'expo-router';
+import Toast from 'react-native-toast-message';
 
 const Sidebar = ({ navigation }) => {
 
+    const [user, setUser] = useState({ name: '', email: '' });
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('userData');
+                if (userData) {
+                    const parsedUser = JSON.parse(userData);
+                    setUser({
+                        name: parsedUser?.user?.name || 'User',
+                        email: parsedUser?.user?.email || 'No Email',
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
+
     const handleClose = () => {
         navigation.closeDrawer();
+    };
+
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('userData');
+            router.replace('/welcome');
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Logout Failed',
+                text2: 'Something went wrong. Please try again.',
+            });
+        }
     };
 
     return( 
@@ -23,8 +60,8 @@ const Sidebar = ({ navigation }) => {
                                 <Image source={require('../assets/user.png')} resizeMode="contain" className="w-[60px] h-16" />
                             </View>
                             <View className="ml-3">
-                                <Text className="text-base leading-[19.2px] font-figtree-medium text-white">Rowan Atkinson</Text>
-                                <Text className="text-sm leading-4 figtree-normal text-white mt-2.5">danishmin@gmail.com</Text>
+                                <Text className="text-base leading-[19.2px] font-figtree-medium text-white">{user.name}</Text>
+                                <Text className="text-sm leading-4 figtree-normal text-white mt-2.5">{user.email}</Text>
                             </View>
                         </View>
                         <Pressable className="w-9 h-9 rounded-[10px] bg-white flex items-center justify-center" onPress={handleClose}>
@@ -84,7 +121,7 @@ const Sidebar = ({ navigation }) => {
                     </View>
                 </View>
                 <View className="px-5">
-                    <Pressable className="border-t border-solid border-[#151F311A] py-6 flex-row">
+                    <Pressable onPress={handleLogout} className="border-t border-solid border-[#151F311A] py-6 flex-row">
                         <AntDesign name="arrowleft" size={24} color="#5C6679" />
                         <Text className="ml-3 font-figtree-semibold text-base leading-5 text-gray-dark">Log Out</Text>
                     </Pressable>

@@ -164,30 +164,27 @@ const TabLayout = () => {
                         options={{
                             title: 'Add',
                             tabBarIcon: () => (
-                                <>
-                                    <Pressable
-                                        onPress={togglePopup}
-                                        activeOpacity={1}
-                                        style={{
-                                            width: 60,
-                                            height: 60,
-                                            borderRadius: 30,
-                                            backgroundColor: "#FFF",
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            position: 'relative',
-                                            zIndex: 1000,
-                                            bottom: 40,
-                                            elevation: 10,
-                                            shadowColor: 'rgba(0,0,0,0.6)',
-                                        }}
-                                    >
-                                        <Animated.View style={{ transform: [{ rotate }] }}>
-                                            <AddIcon />
-                                        </Animated.View>
-                                    
-                                    </Pressable>
-                                </>
+                                <Pressable
+                                    onPress={togglePopup}
+                                    activeOpacity={1}
+                                    style={{
+                                        width: 60,
+                                        height: 60,
+                                        borderRadius: 30,
+                                        backgroundColor: "#FFF",
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        position: 'relative',
+                                        zIndex: 1000,
+                                        bottom: 40,
+                                        elevation: 10,
+                                        shadowColor: 'rgba(0,0,0,0.6)',
+                                    }}
+                                >
+                                    <Animated.View style={{ transform: [{ rotate }] }}>
+                                        <AddIcon />
+                                    </Animated.View>
+                                </Pressable>
                             ),
                         }}
                     />
@@ -250,7 +247,7 @@ const TabLayout = () => {
                 </Tabs>
 
                 {/* Popup Modal */}
-                {isPopupVisible && <AddTabPopup />}
+                {isPopupVisible && <AddTabPopup setIsPopupVisible={setIsPopupVisible} />}
 
             </View>
 

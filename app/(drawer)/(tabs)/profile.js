@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { View, Text, Image, ScrollView} from "react-native";
 import LinkList from "../../../components/profile-tab/linkList";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -5,10 +6,36 @@ import FlatButton from '../../../components/ui/FlatButton'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const Profile = () => {
 
     const router = useRouter();
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('userData');
+                if (userData) {
+                    const parsedUser = JSON.parse(userData);
+                    setUser(parsedUser);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem('userData');
+            router.replace('/welcome');
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    }
 
     return(
         <ScrollView>
@@ -19,7 +46,7 @@ const Profile = () => {
                         <View className="w-28 h-28 rounded-full items-center justify-end bg-[#FFBE98] overflow-hidden">
                             <Image source={require('../../../assets/user.png')} resizeMode="contain" />
                         </View>
-                        <Text className="text-base leading-[19.2px] font-figtree-medium text-blue-dark mt-5">Rowan Atkinson</Text>
+                        <Text className="text-base leading-[19.2px] font-figtree-medium text-blue-dark mt-5">{user?.user?.name}</Text>
                         <Text className="text-sm leading-4 figtree-normal text-gray-dark mt-2.5">Haemophilia A - <Text className="text-red-dark">Severe</Text></Text>
                     </View>
                 </View>
@@ -64,7 +91,7 @@ const Profile = () => {
                         />
                     </View>
 
-                    <FlatButton text="Log Out" classname="bg-red-dark mt-7" />
+                    <FlatButton onPress={handleLogout} text="Log Out" classname="bg-red-dark mt-7" />
 
                     <Text className="font-figtree-normal text-center mt-5 text-blue-light text-base leading-5">App version 1.6.7</Text>
 

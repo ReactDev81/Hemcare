@@ -1,16 +1,20 @@
 import { View, Text} from "react-native";
-import Toast from 'react-native-toast-message';
-import Title from "../../components/ui/title";
-import FlatButton from "../../components/ui/FlatButton";
 import { Link, useRouter} from "expo-router";
-import Input from "../../components/ui/form/input";
-import PasswordInput from "../../components/ui/form/password-input";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Toast from 'react-native-toast-message';
 import { Formik } from "formik";
 import * as Yup from 'yup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import useAxios from "hooks/useAxios";
+import Input from "../../components/ui/form/input";
+import PasswordInput from "../../components/ui/form/password-input";
+import Title from "../../components/ui/title";
+import FlatButton from "../../components/ui/FlatButton";
 
 const Login = () => {
+
+    const { loading, fetchData } = useAxios('/login', 'post');
 
     const router = useRouter();
 
@@ -30,16 +34,28 @@ const Login = () => {
 
             <Formik
                 initialValues={{ email: '', password: '' }}
-                onSubmit={(values, {resetForm }) => {
-                    Toast.show({
-                        type: 'success',
-                        text1: '👋 Hi ' + values.email,
-                        text2: 'You have logged in successfully',
-                    });
-                    router.push('/(drawer)');
-                    resetForm();
-                }}
                 validationSchema={userSchema}
+                onSubmit={async (values, { resetForm }) => {
+                    try {
+                        const response = await fetchData({ data: {...values, remember: 0 } });
+                        if (response.data.token) {
+                            await AsyncStorage.setItem('userData', JSON.stringify(response.data));
+                        }
+                        Toast.show({
+                            type: 'success',
+                            text1: '👋 Hi ' + response.data.user.name,
+                            text2: 'You have logged in successfully',
+                        });
+                        router.push('/(drawer)');
+                        resetForm();
+                    } catch (err) {
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Login Failed',
+                            text2: err.response?.data?.message || 'Something went wrong. Please try again.',
+                        });
+                    }
+                }}
             >
                 {({handleChange, handleBlur, handleSubmit, values, errors}) => (
                     <View className="w-full mt-5">
@@ -57,7 +73,7 @@ const Login = () => {
                         />
                         {errors.password && <Text className="pt-1.5 text-red-dark">{errors.password}</Text>}
                         <Link href="/(drawer)" className="text-right text-xs text-red-dark mt-2.5">Forgot Password</Link>
-                        <FlatButton onPress={handleSubmit} text="Login" classname="mt-10 bg-red-dark" />
+                        <FlatButton onPress={handleSubmit} text={loading ? "Loading..." : "Login"} classname="mt-10 bg-red-dark" />
                     </View>
                 )}
             </Formik>

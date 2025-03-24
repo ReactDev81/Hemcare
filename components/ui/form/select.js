@@ -40,6 +40,7 @@ const Select = ({setValue, value, placeholder, items}) => {
       fontWeight: 400,
       lineHeight: 16,
       letterSpacing: '0.3px',
+      color: 'red'
     },
     icon: {
       position: 'absolute',

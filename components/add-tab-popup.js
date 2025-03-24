@@ -2,6 +2,8 @@ import { View, Text, Pressable} from "react-native";
 import React, { useState } from 'react';
 import Svg, { Path} from 'react-native-svg';
 import RecordBleed from "./modal-screens/record-bleed";
+import AddTreatment from "./modal-screens/add-treatment/index";
+import AddProphylaxis from "./modal-screens/add-prophylaxis";
 
 const BleedIcon = ({color, width, height}) => {
     return(
@@ -28,27 +30,29 @@ const ProphylexisIcon = () => {
     )
 }
 
-const AddTabPopup = () => {
+const AddTabPopup = ({setIsPopupVisible}) => {
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isRecordBleedVisible, setIsRecordBleedVisible] = useState(false);
+    const [isAddTreatmentVisible, setIsAddTreatmentVisible] = useState(false);
+    const [isAddProphylaxisVisible, setAddProphylaxisVisible] = useState(false);
     
     return(
         <View className="absolute bottom-0 left-0 right-0 bg-[#151F3199] items-center justify-end w-full h-full z-10">
             <View className="bg-white rounded-[20px] py-4 px-3 items-start w-52 mb-[120px]">
-                <View className="absolute -bottom-2.5 left-[95px] w-5 h-5 bg-white rotate-45"/>
-                <Pressable onPress={() => setIsModalVisible(true)} className="bg-gray-light p-1.5 rounded-[20px] flex flex-row items-center justify-start w-full">
+                <View className="absolute -bottom-2.5 left-[82px] w-5 h-5 bg-white rotate-45"/>
+                <Pressable onPress={() => setIsRecordBleedVisible(true)} className="bg-gray-light p-1.5 rounded-[20px] flex flex-row items-center justify-start w-full">
                     <View className="w-8 h-8 rounded-full bg-red-light items-center justify-center">
                         <BleedIcon width="14px" height="17px" color="#F43F5E" />
                     </View>
                     <Text className="text-blue-light text-sm leading-4 ml-[8px]">Record Bleed</Text>
                 </Pressable>
-                <Pressable className="p-1.5 rounded-[20px] mt-1.5 flex flex-row items-center justify-start w-full">
+                <Pressable onPress={() => setIsAddTreatmentVisible(true)} className="p-1.5 rounded-[20px] mt-1.5 flex flex-row items-center justify-start w-full">
                     <View className="w-8 h-8 rounded-full bg-green-light items-center justify-center">
                         <AddTreatmentIcon />
                     </View>
                     <Text className="text-gray-dark text-sm leading-4 ml-[8px]">Add Treatment</Text>
                 </Pressable>
-                <Pressable className="p-1.5 rounded-[20px] mt-1.5 flex flex-row items-center justify-start w-full">
+                <Pressable onPress={() => setAddProphylaxisVisible(true)} className="p-1.5 rounded-[20px] mt-1.5 flex flex-row items-center justify-start w-full">
                     <View className="w-8 h-8 rounded-full bg-[#F2EAFF] items-center justify-center">
                         <ProphylexisIcon />
                     </View>
@@ -56,8 +60,25 @@ const AddTabPopup = () => {
                 </Pressable>
             </View>
             <RecordBleed 
-                visible={isModalVisible} 
-                onClose={() => setIsModalVisible(false)} 
+                visible={isRecordBleedVisible} 
+                onClose={() => {
+                    setIsRecordBleedVisible(false),
+                    setIsPopupVisible(false)
+                }} 
+            />
+            <AddTreatment 
+                visible={isAddTreatmentVisible} 
+                onClose={() => {
+                    setIsAddTreatmentVisible(false),
+                    setIsPopupVisible(false)
+                }}
+            />
+            <AddProphylaxis 
+                visible={isAddProphylaxisVisible} 
+                onClose={() => {
+                    setAddProphylaxisVisible(false),
+                    setIsPopupVisible(false)
+                }}
             />
         </View>
     )

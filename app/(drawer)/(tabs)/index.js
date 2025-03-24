@@ -101,18 +101,22 @@ const Home = () => {
                 <View className="flex flex-row items-center justify-between">
                     <QuickLinks 
                         name="Bleeds"
+                        link="/bleed"
                         icon={<BleedIcon width="27" height="36" color="#F43F5E" />}
                     />
                     <QuickLinks 
                         name="Treatments"
+                        link="/treatment"
                         icon={<TreatmentIcon width="29" height="29" />}
                     />
                     <QuickLinks 
                         name="Prophylexis"
+                        link="/"
                         icon={<ProphylexisIcon />}
                     />
                     <QuickLinks 
                         name="Surveys"
+                        link="/"
                         icon={<SurveysIcon width="27" height="36" color="#F6A825" />}
                     />
                 </View>
@@ -131,7 +135,6 @@ const Home = () => {
                 </View>
 
             </View>
-            
             
         </View>
     )
