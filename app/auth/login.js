@@ -72,7 +72,7 @@ const Login = () => {
                             onBlur={handleBlur('password')}
                         />
                         {errors.password && <Text className="pt-1.5 text-red-dark">{errors.password}</Text>}
-                        <Link href="/(drawer)" className="text-right text-xs text-red-dark mt-2.5">Forgot Password</Link>
+                        <Link href="auth/forgot-password/send-otp" className="text-right text-xs text-red-dark mt-2.5">Forgot Password</Link>
                         <FlatButton onPress={handleSubmit} text={loading ? "Loading..." : "Login"} classname="mt-10 bg-red-dark" />
                     </View>
                 )}
